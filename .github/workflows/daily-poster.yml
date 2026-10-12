@@ -1,1 +1,65 @@
+name: Daily Prompt Poster Agent
 
+on:
+  schedule:
+    # 14:30 UTC equals 8:00 PM IST (Asia/Kolkata)
+    - cron: '30 14 * * *'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish to Facebook? (Check to go live)'
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: daily-poster
+  cancel-in-progress: false
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+
+    env:
+      # Publish if it's a schedule run & repo variable is true, OR if manual input is true
+      PUBLISH_ENABLED: ${{ (github.event_name == 'schedule' && vars.PUBLISH_ENABLED == 'true') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true') }}
+      META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+      META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }}
+      META_GRAPH_API_VERSION: ${{ vars.META_GRAPH_API_VERSION || 'v19.0' }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Quality Checks
+        run: pytest tests/
+
+      - name: Generate & Publish Poster
+        run: python main.py
+
+      - name: Archive Output Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: poster-output
+          path: output/
+          retention-days: 7
+
+      - name: Persist Prompt History
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: persist prompt state [skip ci]" && git push)
