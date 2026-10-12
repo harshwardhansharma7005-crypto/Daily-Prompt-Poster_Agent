@@ -1,1 +1,10 @@
-
+{
+  "design": {
+    "bg_color": "#0d0d0d",
+    "gold_color": "#d4af37",
+    "text_color": "#ffffff",
+    "width": 1080,
+    "height": 1350
+  },
+  "history_limit": 30
+}
