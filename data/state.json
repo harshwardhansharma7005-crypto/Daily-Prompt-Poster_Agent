@@ -1,4 +1,6 @@
 {
-  "used_prompts": [],
-  "last_category": null
+  "used_prompts": [
+    "biz_1"
+  ],
+  "last_category": "Business"
 }
