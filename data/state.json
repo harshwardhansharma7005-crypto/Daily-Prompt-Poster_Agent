@@ -1,14 +1,6 @@
 {
   "used_prompts": [
-    "biz_1",
-    "write_1",
-    "code_1",
-    "create_1",
-    "prod_1",
-    "career_1",
-    "study_1",
-    "budget_1",
-    "safe_1"
+    "career_1"
   ],
-  "last_category": "Digital Safety"
+  "last_category": "Career"
 }
