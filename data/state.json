@@ -1,7 +1,8 @@
 {
   "used_prompts": [
     "prod_1",
-    "safe_1"
+    "safe_1",
+    "biz_1"
   ],
-  "last_category": "Digital Safety"
+  "last_category": "Business"
 }
