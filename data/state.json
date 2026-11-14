@@ -2,7 +2,8 @@
   "used_prompts": [
     "prod_1",
     "safe_1",
-    "biz_1"
+    "biz_1",
+    "study_1"
   ],
-  "last_category": "Business"
+  "last_category": "Study"
 }
